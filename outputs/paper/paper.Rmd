@@ -3,7 +3,7 @@ title: "My title"
 subtitle: "My subtitle if needed"
 author: 
   - Adam Labas aka atom-laboss
-thanks: "Code and data are available at: https://github.com/adam-labas/starter_folder"
+thanks: "Code and data are available at: https://github.com/adam-labas/adam_labas_paper_1_opendatatoronto"
 date: "`r format(Sys.time(), '%d %B %Y')`"
 abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
 output:
