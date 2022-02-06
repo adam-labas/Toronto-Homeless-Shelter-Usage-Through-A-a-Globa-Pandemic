@@ -1,18 +1,19 @@
 ---
 title: "Vizualizing Toronto Homess Shelter data Across a Global Pandemic"
-subtitle: "The City of Toronto's failure to aid a certain demographic has led to a disproportioanlity in the of Toronto Homeless Shelters // "
+subtitle: "A Look Into How The Pandemic disrupted the Flow Of Homeless Shelters And How The Situation Has Improved Since"
 author: 
   - Adam Labas
 thanks: "Code and data are available at: https://github.com/adam-labas/adam_labas_paper_1_opendatatoronto"
 date: "`r format(Sys.time(), '%d %B %Y')`"
-abstract: "In addition to a global pandemic, homlessness and housing is a self apparent issue in the city of Toronto. Taking a stroll through certain areas in the downtown core, it's almost impossible to miss homeless tent cities and homeless people lined outside of shelters awaiting food or entry in the afternoon. Upon further examination of data collected from the Open Data Portal of the City of Toronto, it was easy to find interesting trends in homeless shelter data in the years 2020 and 2021. We found trends in the diminishing use of sheleters by various demographic of homeless people and age groups. This paper attempts to visualize these trends as well as touch on some problems that one might experience in trying to extract real meaning from the data."
+abstract: "In addition to a global pandemic, homlessness and housing is a self apparent issue in the city of Toronto. Taking a stroll through certain areas in the downtown core, it's almost impossible to miss homeless tent cities and homeless people lined outside of shelters awaiting food or entry in the afternoon. Upon further examination of data collected from the Open Data Portal of the City of Toronto, it was easy to find interesting trends in homeless shelter data in the years 2020 and 2021. We found trends in the diminishing use of shelters by various demographic of homeless people and age groups. This paper attempts to visualize these trends as well as touch on some problems that one might experience in trying to extract real meaning from the data."
 output:
-  bookdown::pdf_document2
+  bookdown::pdf_document2:
+    extra_dependencies: ["float"]
 toc: TRUE
 bibliography: references.bib
 ---
 
-```{r setup, include = FALSE}
+```{r setup, fig.pos = "!H", include = FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
@@ -26,21 +27,51 @@ library(lubridate)
 
 monthly_shelter_usage <- read_csv(here::here("inputs/data/raw.csv"))
 all_population <- read_csv(here::here("inputs/data/all_pop.csv"))
+no_all_population <- read_csv(here::here("inputs/data/no_all_pop.csv"))
 
 ```
 
+\pagebreak
+
 # Introduction
 
+The year 2020 was no doubt a year of unspoken discomfort and uncharted territories for everyone. For myself, the year 2020 started of like all the others. Winter commutes to school and winter festivities like ice skating with friends. As the semester started to develop and I started to get into a routine with my new classes, we started hearing of the corona virus which had supposedly arrived from China and was rapidly making its way around the globe. Although this seemed as nothing but a farce and a scene from a movie, the reality and gravity of the situation rapidly started to be apparent. As school was brought to an abrupt stop after the World Health Organization had declared COVID-19 as a pandemic on March 11th 2020 (https://www.who.int/director-general/speeches/detail/who-director-general-s-opening-remarks-at-the-media-briefing-on-covid-19---11-march-2020), the magnitude on the situation started to manifest itself in everyone daily lives. However, many lives were affected much more than others. 
 
+While I was mostly confined to the four corners of my home for the vast part of 2020. Being indoor during the cold Canadian winter has never been more of a challenge. However, it does require a brief explanation to claim that some people under no confinement at all, would be in a much more grave situation. For long, homelessness has been a problem in the city of Toronto. Going for a stroll through certain areas in the downtown core, it's almost impossible to miss homeless tent cities and homeless people lined outside of shelters awaiting food or entry in the afternoon. The privilege that people who live in homes have is immense and the difficulties that homeless people face daily is a reality that no one ever wants to live.
+
+In this analysis, I had a look at Toronto Homeless shelter data, which is described with great extent in the Data Section \@ref(data). In my analysis, I decided to focus on how the global pandemic has impacted the homeless community of Toronto by creating visuals on the progression of the shelter usage thought the 24 months from January 2020 to December 2021. To further break down the analysis, I decided to look into the distribution of the aforementioned data but segregating the data not only by the various age group bins provided in the data sent but also the different demographic population groups provided. In general, it was found that shelter usage dropped drastically, immediately after the start of the pandemic and has recently been slowly trending back to its original usage flow. In this paper, I will attempt to take you on a journey to explore the data that was used to produce the findings, I will visually present to you the findings and I we will speak about the implications of the findings and later on in the Limitations Section \@ref(limitations), we will discuss the limitations of our data and problems that this may have when wanting to extract true, ethical, unbiased information from the implications of the findings.
 
 You can and should cross-reference sections and sub-sections. For instance, Section \@ref(data). R Markdown automatically makes the sections lower case and adds a dash to spaces to generate labels, for instance, Section \@ref(first-discussion-point). 
 
+abstract: "In addition to a global pandemic, homelessness and housing is a self apparent issue in the city of Toronto. Taking a stroll through certain areas in the downtown core, it's almost impossible to miss homeless tent cities and homeless people lined outside of shelters awaiting food or entry in the afternoon. Upon further examination of data collected from the Open Data Portal of the City of Toronto, it was easy to find interesting trends in homeless shelter data in the years 2020 and 2021. We found trends in the diminishing use of shelters by various demographic of homeless people and age groups. This paper attempts to visualize these trends as well as touch on some problems that one might experience in trying to extract real meaning from the data."
+
+\pagebreak
 
 # Data
 
-All the data that is used in this paper was retrieved from the City of Toronto Open Data Portal and is titled "Toronto Shelter System Flow" on their end. Using the R package opendatatoronto @citeODT
+In this Data Section \@ref(data), I will provide a look into the data acquisition and processing methodology as well as a deep dive into the contents of the data.
 
-```{r bills, fig.cap="Bills of penguins", echo = FALSE, message = FALSE, warning = FALSE, out.width = '80%', fig.align = "center"}
+## Data Collection
+All the data that is used in this paper was retrieved from the City of Toronto Open Data Portal and is titled "Toronto Shelter System Flow". Using the R package opendatatoronto [@citeODT], we loaded the data in the R-script titled *Data Acquisition and Processing*. The data is uploaded and funded by the City of Toronto and is refreshed monthly, last being updated on January 7th 2022 as of February 6th 2022. As the webpage in the Open Data Toronto Portal explains, "the City of Torontofunds and operates services dedicated to people experiencing homelessness in Toronto." They go on to explain that the services which they provide like emergency shelters, hotels/motels, warming centers etc. all use the Shelter Management Information System (SMIS) to track and log people entering the municipally funded homeless shelter system. When a new person enters the SMIS for the first time, many data points are collected. These variables are presented in our data. They include 14 variables like the current month and year for which the count is being recorded, the number of people who are returning/moving to/from housing, returning to shelter and more importantly for our analysis, the population group and the age group which the homeless person fits in. 
+
+## Variables of interest
+Population group  is divided into seven categories, All Population, Chronic, Families, Indigenous, Non-refugees, Refugees, Single Adult and Youth, with Indigenous only being a population group which the SMIS began tracking in January 2021. Certain group definitions are important. First off, the population group Youth is defined by the Open Data Toronto Portal as "unaccompanied youth and includes people who are between 16 and 24 years old by the last date of the reporting month and are not members of a family." Next, the age groups in the data set are divided as such: peoples aged under 16, aged 16 to 24, aged 25 to 44, aged 45-64 and aged 65 and above. Importantly, we also use the date variable to 
+
+## Data Processing
+To process our data, we began by loading all the necessary libraries like opendatatoronto @citeODT whichwas used to load the data into R @citeR, a package called lubridate @citelubridate which will be used to process date data which later proves to be quite tricky. We also used load in libraries knitr 
+
+```{r, fig.pos = "!H",echo = FALSE}
+no_all_population %>%
+  ggplot(mapping = aes(x = month, y = ageunder16, color = population_group)) +
+  geom_line() +
+  labs(x = "Months from January 2020",
+          y = "Count of Shelter Users Under Age 16",
+          caption = "Use of shelter users under age 16 by population group.") +
+  scale_x_continuous(breaks=c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24)) +
+  theme_minimal()
+```
+
+```{r bills, fig.pos = "!H", fig.cap="Bills of penguins", echo = FALSE, message = FALSE, warning = FALSE, out.width = '80%', fig.align = "center"}
 
 monthly_shelter_usage %>% 
   select(population_group, ageunder16, `age16-24`, `age25-44`, `age45-64`, age65over) %>% 
@@ -73,7 +104,21 @@ Talk more about it.
 
 Also bills and their average (Figure \@ref(fig:billssssss)). (Notice how you can change the height and width so they don't take the whole page?)
 
-```{r billssssss, fig.cap="More bills of penguins", echo = FALSE, fig.width=8, fig.height=10}
+
+```{r}
+ageunder16_overtime <- all_population %>%
+  ggplot(aes(x = date,
+             y = ageunder16)) +
+  labs(x = "Date",
+       y = "Under 16",
+       caption = "Shelter use by those aged under 16 in 2020 and 2021") +
+  geom_line() +
+  theme_minimal()
+ageunder16_overtime
+```
+
+
+```{r Usage of Age Groups By Year, fig.cap = " ", echo = FALSE, fig.width=10, fig.height=10}
 library(patchwork)
 ageunder16_overtime <- all_population %>%
   ggplot(aes(x = date,
@@ -151,6 +196,8 @@ We can use maths by including latex between dollar signs, for instance $\theta$.
 # Results
 
 # Discussion
+
+# Limitations
 
 ## First discussion point
 
