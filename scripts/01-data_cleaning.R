@@ -49,12 +49,12 @@ monthly_shelter_usage <-
   get_resource()
 
 
-### Save the data in our inputs folder in case the data is removed or
-# relocated from the URL provided above ###
+# Save the data in our inputs folder in case the data is removed or ####
+# relocated from the URL provided above.
 write.csv(x = monthly_shelter_usage,
           file = "inputs/data/raw.csv")
 
-### Clean the data and only take the information we wish to use ###
+#### Clean the data and only take the information we wish to use ####
 
 # Add a total column
 total <- c()
@@ -87,28 +87,15 @@ year_2020_and_2021 <- c("2020", "2020", "2020", "2020", "2020", "2020", "2020",
                         "2020", "2020", "2020", "2020", "2020", "2021", "2021", 
                         "2021", "2021", "2021", "2021", "2021", "2021", "2021", 
                         "2021", "2021","2021")
-
-
-
-#("2020", "2020", "2020", "2020", "2020", "2020", "2020", 
-# "2020", "2020", "2020", "2020", "2020", "2021", "2021", 
-# "2021", "2021", "2021", "2021", "2021", "2021", "2021", 
-# "2021", "2021","2021"))
-
-#("20", "20", "20", "20", "20", "20", "20", "20", "20", 
-# "20", "20", "20", "21", "21", "21", "21", "21", "21", 
-# "21", "21", "21", "21", "21","21")
-
-
 all_population$year <- year_2020_and_2021
+
 
 # Add a months column as numeric variable from 1-12
 month_2020_and_2021 <- c("01", "02", "03", "04", "05", "06", "07", "08", "09", 
                          "10", "11", "12", "01", "02", "03", "04", "05", "06", 
                          "07", "08", "09", "10", "11", "12")
-
-
 all_population$month <- month_2020_and_2021
+
 
 # Add a column with the last day of every month
 day_2020_and_2021 <- c("31", "29", "31", "30", "31", "30", "31", "31", "30", 
@@ -129,13 +116,12 @@ for (i in 1:length(all_population$ageunder16)){
   print(date_new)
   dates[i] <- date_new
 }
-
 all_population$date <- as.Date(dates, origin = "1970-01-01")
 
 
 
 ### Save the data in our inputs folder in case the data is removed or
-# relocated from the URL provided above ###
+# relocated from the URL provided above ####
 
 write.csv(x = cleaned_data,
           file = "inputs/data/clean.csv")
