@@ -1,58 +1,134 @@
 ---
-title: "My title"
-subtitle: "My subtitle if needeeeeeeeeeeeeeed"
+title: "Vizualizing Toronto Homess Shelter data Across a Global Pandemic"
+subtitle: "The City of Toronto's failure to aid a certain demographic has led to a disproportioanlity in the of Toronto Homeless Shelters // "
 author: 
-  - Adam Labas aka atom-laboss
+  - Adam Labas
 thanks: "Code and data are available at: https://github.com/adam-labas/adam_labas_paper_1_opendatatoronto"
 date: "`r format(Sys.time(), '%d %B %Y')`"
-abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
+abstract: "In addition to a global pandemic, homlessness and housing is a self apparent issue in the city of Toronto. Taking a stroll through certain areas in the downtown core, it's almost impossible to miss homeless tent cities and homeless people lined outside of shelters awaiting food or entry in the afternoon. Upon further examination of data collected from the Open Data Portal of the City of Toronto, it was easy to find interesting trends in homeless shelter data in the years 2020 and 2021. We found trends in the diminishing use of sheleters by various demographic of homeless people and age groups. This paper attempts to visualize these trends as well as touch on some problems that one might experience in trying to extract real meaning from the data."
 output:
   bookdown::pdf_document2
-toc: FALSE
+toc: TRUE
 bibliography: references.bib
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
-library(palmerpenguins)
+library(janitor)
+library(dplyr)
+library(tidyr)
+library(opendatatoronto)
+library(knitr)
+library(patchwork)
+library(lubridate)
+
+monthly_shelter_usage <- read_csv(here::here("inputs/data/raw.csv"))
+all_population <- read_csv(here::here("inputs/data/all_pop.csv"))
+
 ```
 
 # Introduction
 
-You can and should cross-reference sections and sub-sections. For instance, Section \@ref(data). R Markdown automatically makes the sections lower case and adds a dash to spaces to generate labels, for instance, Section \@ref(first-discussion-point). 
 
+
+You can and should cross-reference sections and sub-sections. For instance, Section \@ref(data). R Markdown automatically makes the sections lower case and adds a dash to spaces to generate labels, for instance, Section \@ref(first-discussion-point). 
 
 
 # Data
 
-Our data is of penguins (Figure \@ref(fig:bills)).
+All the data that is used in this paper was retrieved from the City of Toronto Open Data Portal and is titled "Toronto Shelter System Flow" on their end. Using the R package opendatatoronto @citeODT
 
-```{r bills, fig.cap="Bills of penguins", echo = FALSE}
-ggplot(penguins, aes(x = island, fill = species)) +
-  geom_bar(alpha = 0.8) +
-  scale_fill_manual(values = c("darkorange","purple","cyan4"),
-                    guide = FALSE) +
-  theme_minimal() +
-  facet_wrap(~species, ncol = 1) +
-  coord_flip()
+```{r bills, fig.cap="Bills of penguins", echo = FALSE, message = FALSE, warning = FALSE, out.width = '80%', fig.align = "center"}
+
+monthly_shelter_usage %>% 
+  select(population_group, ageunder16, `age16-24`, `age25-44`, `age45-64`, age65over) %>% 
+  slice(1:10) %>% 
+  kable(
+    caption = "First ten rows of a dataset of shelture usage",
+    col.names = c("Population Group", "Aged less than 16 ", "Aged 16-24", "Aged 25-44", "Aged 45-64", "Aged 65"),
+    digits = 1,
+    booktabs = TRUE,
+    linesep = "" 
+    )
 ```
+
+```{r , fig.cap = "There are no Indeginous data for 2020", echo = FALSE, message = FALSE, warning = FALSE, out.width = '80%', fig.align = "center"}
+
+shelter_usage_by_demographic <-
+  monthly_shelter_usage %>%
+  ggplot(mapping = aes(x = `date(mmm-yy)`, 
+                       fill = population_group)) +
+  geom_bar() +
+  coord_flip() +
+  theme_linedraw()
+
+shelter_usage_by_demographic
+
+```
+
 
 Talk more about it.
 
 Also bills and their average (Figure \@ref(fig:billssssss)). (Notice how you can change the height and width so they don't take the whole page?)
 
-```{r billssssss, fig.cap="More bills of penguins", echo = FALSE, fig.width=8, fig.height=4}
+```{r billssssss, fig.cap="More bills of penguins", echo = FALSE, fig.width=8, fig.height=10}
+library(patchwork)
+ageunder16_overtime <- all_population %>%
+  ggplot(aes(x = date,
+             y = ageunder16)) +
+  labs(x = "Date",
+       y = "Under 16",
+       caption = "Shelter use by those aged under 16 in 2020 and 2021") +
+  geom_line() +
+  theme_minimal()
 
-# This needs to be about the random data tha tI sasmpled?
-ggplot(penguins, aes(x = island, fill = species)) +
-  geom_bar(alpha = 0.8) +
-  scale_fill_manual(values = c("darkorange","purple","cyan4"),
-                    guide = FALSE) +
-  theme_minimal() +
-  facet_wrap(~species, ncol = 1) +
-  coord_flip()
+
+age_16to24_overtime <- all_population %>%
+  ggplot(aes(x = date,
+             y = `age16-24`)) +
+    labs(x = "Date",
+       y = "Aged 16 to 24",
+       caption = "Shelter use by those aged between 16 and 24 in 2020 and 2021") +
+  geom_line() +
+  theme_minimal()
+
+
+age_25to44_overtime <- all_population %>%
+  ggplot(aes(x = date,
+             y = `age25-44`)) +
+    labs(x = "Date",
+       y = "Aged 25 to 44",
+       caption = "Shelter use by those aged between 25 and 44 in 2020 and 2021") +
+  geom_line() +
+  theme_minimal()
+
+
+age_45to64_overtime <- all_population %>%
+  ggplot(aes(x = date,
+             y = `age45-64`)) +
+    labs(x = "Date",
+       y = "Aged 45 to 64",
+       caption = "Shelter use by those aged between 45 and 64 in 2020 and 2021") +
+  geom_line() +
+  theme_minimal()
+
+age_66_plus <- all_population %>%
+  ggplot(aes(x = date,
+             y = age65over)) +
+    labs(x = "Date",
+       y = "Aged 65 and above",
+       caption = "Shelter use by those aged older than 65 in 2020 and 2021") +
+  geom_line() +
+  theme_minimal()
+
+ageunder16_overtime /
+  age_16to24_overtime/
+  age_25to44_overtime /
+  age_45to64_overtime /
+  age_66_plus
+  
 ```
 
 Talk way more about it. 
@@ -102,5 +178,3 @@ Weaknesses and next steps should also be included.
 
 
 # References
-
-
