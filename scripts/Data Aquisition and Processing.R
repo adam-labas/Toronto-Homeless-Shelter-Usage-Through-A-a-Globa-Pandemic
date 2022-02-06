@@ -91,9 +91,11 @@ no_all_population$year <- all_year_2020_and_202
 
 # Add months as numbers 1-12 for 2020 and 2021
 
-months_2020 <- rep(c(1,2,3,4,5,6,7,8,9,10,11,12), each = 6)
+months_2020 <- rep(c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12), 
+                   each = 6)
 
-months_2021 <- rep(c(13,14,15,16,17,18,19,20,21,22,23,24), each = 7)
+months_2021 <- rep(c(13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24),
+                   each = 7)
 all_months_2020_and_2021 <- c(months_2020, months_2021)
 
 months_2020_and_2021 <- c(months_2020, months_2021)
@@ -112,6 +114,8 @@ all_population$year <- year_2020_and_2021
 month_2020_and_2021 <- c("01", "02", "03", "04", "05", "06", "07", "08", "09", 
                          "10", "11", "12", "01", "02", "03", "04", "05", "06", 
                          "07", "08", "09", "10", "11", "12")
+
+
 all_population$month <- month_2020_and_2021
 
 
