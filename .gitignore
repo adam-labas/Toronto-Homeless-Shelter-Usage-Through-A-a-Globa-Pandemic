@@ -45,6 +45,5 @@ vignettes/*.pdf
 # R Environment Variables
 .Renviron
 
-
-# homless data
+# all data
 *.csv
